@@ -1,0 +1,17 @@
+# default model for all sessions
+model: openrouter/deepseek/deepseek-v4-pro
+
+# disable automatic git commits to keep history strictly under user control
+auto-commits: false
+
+# automatically load personal coding standards and rules on startup
+read:
+  - ~/.config/aider-standards.md
+
+# model aliases and presets for quick switching
+alias:
+  ds3: openrouter/deepseek/deepseek-v3.2
+  ds4: openrouter/deepseek/deepseek-v4-pro
+  sonnet: openrouter/anthropic/claude-3.6-sonnet
+  flash: openrouter/google/gemini-2.5-flash
+  haiku: openrouter/anthropic/claude-3-haiku
