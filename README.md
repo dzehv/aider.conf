@@ -45,6 +45,16 @@ export OPENROUTER_API_KEY="your_openrouter_api_key_here"
 - aider — launch with default model (deepseek-v4-pro) and disabled auto-commits.
 - aider --model sonnet — quick switch to Claude via alias.
 - aider --chat-history-file .history.feature.md — isolate history for a specific large task.
+- aider --chat-mode <mode> — set chat mode on startup (code, architect, ask, help).
+
+## Chat Modes
+
+Specify chat behavior via `--chat-mode <mode>` flag or `/chat-mode <mode>` in-session command:
+
+- `code` — standard editing mode; directly modifies code files.
+- `architect` — two-step mode; plans architecture/solutions before writing code.
+- `ask` — conversational mode; answers questions about the codebase without making file changes.
+- `help` — help mode; answers questions about Aider's usage, commands, and options.
 
 ## Model Aliases (Presets)
 
