@@ -44,6 +44,7 @@ export OPENROUTER_API_KEY="your_openrouter_api_key_here"
 
 - aider — launch with default model (deepseek-v4-pro) and disabled auto-commits.
 - aider --model sonnet — quick switch to Claude via alias.
+- aider --edit-format <format> — set edit format on startup (diff, whole, udiff, architect).
 - aider --chat-history-file .history.feature.md — isolate history for a specific large task.
 - aider --chat-mode <mode> — set chat mode on startup (code, architect, ask, help).
 
@@ -55,6 +56,17 @@ Specify chat behavior via `--chat-mode <mode>` flag or `/chat-mode <mode>` in-se
 - `architect` — two-step mode; plans architecture/solutions before writing code.
 - `ask` — conversational mode; answers questions about the codebase without making file changes.
 - `help` — help mode; answers questions about Aider's usage, commands, and options.
+
+## Edit Formats
+
+Specify how the model applies code changes via `--edit-format <format>` flag or in `.aider.conf.yml` (`edit-format: <format>`):
+
+- `diff` — block-based search and replace; standard and highly efficient for capable models.
+- `whole` — rewrites the entire file; token-heavy but reliable, often used for smaller or weaker models.
+- `udiff` — standard unified diff format; optimal for models heavily pre-trained on git diffs.
+- `architect` — two-model approach where the primary model plans the solution and delegates code changes to an editor model.
+
+*Note: In-session edit behavior can also be switched dynamically using `/chat-mode <mode>` (or shortcut commands like `/code` and `/architect`).*
 
 ## Model Aliases (Presets)
 
@@ -69,7 +81,9 @@ Defined in .aider.conf.yml:
 ## Interactive Session Commands
 
 - /clear — wipe current conversation memory to start a fresh sub-task.
-- /model <alias> — switch model on the fly during the session.
+- /model <alias> — switch main model on the fly during the session.
+- /editor-model <alias> — switch editor model used when in architect mode.
+- /chat-mode <mode> — switch chat/edit mode on the fly (`code`, `architect`, `ask`, `help`).
 - /diff — view current uncommitted changes made by the agent in local files.
 - /undo — revert the last applied changes.
 
