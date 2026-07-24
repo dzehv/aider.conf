@@ -40,9 +40,17 @@ Aider requires an API key to communicate with models via OpenRouter. Set it in y
 export OPENROUTER_API_KEY="your_openrouter_api_key_here"
 ```
 
+## Global Configuration (`.aider.conf.yml`)
+
+Key settings configured in `.aider.conf.yml`:
+
+- `auto-commits: false` — disables automatic git commits after edits to keep git history strictly under user control.
+- `read` — automatically loads personal coding standards (`~/.config/aider/aider-coding-standards.md`) on startup.
+
 ## Launch Parameters & CLI Flags
 
 - `aider` — launch with default model (`deepseek-v4-pro`) and disabled auto-commits.
+- `aider --no-auto-commits` — disable automatic git commits on startup (`auto-commits: false` in `.aider.conf.yml`).
 - `aider --model <alias>` — quick switch model via alias (e.g. `sonnet`).
 - `aider --read <file>` — add file(s) as read-only context on startup.
 - `aider --edit-format <format>` — set edit format on startup (`diff`, `whole`, `udiff`, `architect`).
@@ -85,6 +93,7 @@ Defined in .aider.conf.yml:
 - `/model <alias>` — switch main model on the fly during the session.
 - `/editor-model <alias>` — switch editor model used when in architect mode.
 - `/chat-mode <mode>` — switch chat/edit mode on the fly (`code`, `architect`, `ask`, `help`).
+- `/auto-commits` — toggle automatic git commits on/off during the session.
 - `/read <file>` — add read-only file to active context (reference without editing).
 - `/diff` — view current uncommitted changes made by the agent in local files.
 - `/undo` — revert the last applied changes.
