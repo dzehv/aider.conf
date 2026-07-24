@@ -20,3 +20,7 @@
 - Use brief bullet points.
 - Focus ONLY on current pending tasks, architectural decisions, and the immediate next step.
 - Keep the summary under 300 words.
+
+# Architect Mode & Planning Guidelines
+
+- In `architect` mode, suggest saving feature/change plans, architecture specs, or analysis documents into `plans/` (a directory at the root of the git repository or working directory).
