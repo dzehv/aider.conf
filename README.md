@@ -46,6 +46,11 @@ Key settings configured in `.aider.conf.yml`:
 
 - `auto-commits: false` — disables automatic git commits after edits to keep git history strictly under user control.
 - `read` — automatically loads personal coding standards (`~/.config/aider/aider-coding-standards.md`) on startup.
+- `weak-model` — specifies a cheaper/faster auxiliary model for low-complexity tasks (e.g. commit message generation, simple summaries). Example:
+
+```yaml
+weak-model: openrouter/deepseek/deepseek-v3.2
+```
 
 ## Access & Security Controls
 
@@ -71,6 +76,7 @@ Aider provides multiple configuration options and CLI flags to control filesyste
 - `aider --chat-mode <mode>` — set chat mode on startup (`code`, `architect`, `ask`, `help`).
 - `aider --subtree-only` — restrict Aider's context and operations strictly to the current directory subtree.
 - `aider --no-git` — disable Git integration completely.
+- `aider --weak-model <alias>` — specify an auxiliary model for low-cost tasks (e.g. `aider --weak-model ds3`).
 
 ## Chat Modes
 
@@ -109,6 +115,7 @@ Defined in .aider.conf.yml:
 - `/clear` — wipe current conversation memory to start a fresh sub-task.
 - `/model <alias>` — switch main model on the fly during the session.
 - `/editor-model <alias>` — switch editor model used when in architect mode.
+- `/weak-model <alias>` — switch auxiliary (weak) model on the fly during the session.
 - `/chat-mode <mode>` — switch chat/edit mode on the fly (`code`, `architect`, `ask`, `help`).
 - `/auto-commits` — toggle automatic git commits on/off during the session.
 - `/yes-always` — toggle auto-confirmation mode on/off for prompts during the session.

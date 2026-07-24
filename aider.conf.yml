@@ -1,6 +1,9 @@
 # default model for all sessions
 model: openrouter/deepseek/deepseek-v4-pro
 
+# weak model for background tasks and repo maps
+weak-model: openrouter/deepseek/deepseek-v3.2
+
 # disable automatic git commits to keep history strictly under user control
 auto-commits: false
 
