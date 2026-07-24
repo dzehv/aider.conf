@@ -42,11 +42,12 @@ export OPENROUTER_API_KEY="your_openrouter_api_key_here"
 
 ## Launch Parameters & CLI Flags
 
-- aider — launch with default model (deepseek-v4-pro) and disabled auto-commits.
-- aider --model sonnet — quick switch to Claude via alias.
-- aider --edit-format <format> — set edit format on startup (diff, whole, udiff, architect).
-- aider --chat-history-file .history.feature.md — isolate history for a specific large task.
-- aider --chat-mode <mode> — set chat mode on startup (code, architect, ask, help).
+- `aider` — launch with default model (`deepseek-v4-pro`) and disabled auto-commits.
+- `aider --model <alias>` — quick switch model via alias (e.g. `sonnet`).
+- `aider --read <file>` — add file(s) as read-only context on startup.
+- `aider --edit-format <format>` — set edit format on startup (`diff`, `whole`, `udiff`, `architect`).
+- `aider --chat-history-file <file>` — isolate history for a specific task (e.g. `.history.feature.md`).
+- `aider --chat-mode <mode>` — set chat mode on startup (`code`, `architect`, `ask`, `help`).
 
 ## Chat Modes
 
@@ -80,12 +81,13 @@ Defined in .aider.conf.yml:
 
 ## Interactive Session Commands
 
-- /clear — wipe current conversation memory to start a fresh sub-task.
-- /model <alias> — switch main model on the fly during the session.
-- /editor-model <alias> — switch editor model used when in architect mode.
-- /chat-mode <mode> — switch chat/edit mode on the fly (`code`, `architect`, `ask`, `help`).
-- /diff — view current uncommitted changes made by the agent in local files.
-- /undo — revert the last applied changes.
+- `/clear` — wipe current conversation memory to start a fresh sub-task.
+- `/model <alias>` — switch main model on the fly during the session.
+- `/editor-model <alias>` — switch editor model used when in architect mode.
+- `/chat-mode <mode>` — switch chat/edit mode on the fly (`code`, `architect`, `ask`, `help`).
+- `/read <file>` — add read-only file to active context (reference without editing).
+- `/diff` — view current uncommitted changes made by the agent in local files.
+- `/undo` — revert the last applied changes.
 
 ## Working with Files & Context Management
 
@@ -95,6 +97,9 @@ Aider does not load the full content of all repository files into the model's co
 * **Adding Files for Editing:** Explicitly add files to the active session so the model can read or modify them:
   * **On startup:** `aider src/main.go src/utils.go`
   * **During the session:** `/add path/to/file.go`
+* **Adding Read-Only Files for Context:** Add files that the model can reference as context without modifying them:
+  * **On startup:** `aider --read path/to/file.go`
+  * **During the session:** `/read path/to/file.go`
 * **Session File Commands:**
   * `/ls` — list files currently active in the session context.
   * `/drop path/to/file.go` — remove a file from the active working context.
