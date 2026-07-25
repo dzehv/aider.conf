@@ -40,6 +40,12 @@ Aider requires an API key to communicate with models via OpenRouter. Set it in y
 export OPENROUTER_API_KEY="your_openrouter_api_key_here"
 ```
 
+Aider uses the `AIDER_EDITOR`, `EDITOR`, `VISUAL` environment variables to determine which text editor to open for commands like `/editor`. If not set, it falls back to `vi`. You can either export `AIDER_EDITOR` in your shell profile (e.g., `export AIDER_EDITOR="emacs -nw"`) or pass it when launching Aider:
+
+``` bash
+export AIDER_EDITOR="emacs -nw"
+```
+
 ## Global Configuration (`.aider.conf.yml`)
 
 Key settings configured in `.aider.conf.yml`:
@@ -49,6 +55,7 @@ Key settings configured in `.aider.conf.yml`:
 - `weak-model` — specifies a cheaper/faster auxiliary model for low-complexity tasks (e.g. commit message generation, simple summaries). Example:
 - `cache-prompts: true` — enables prompt caching on the provider side (Anthropic / some OpenRouter models); reduces costs and latency for repeated context.
 - `stream: false` — disables streaming; Aider waits for the full model response before displaying output.
+- `editor` — sets the preferred text editor for `/editor` and similar commands. Can be overridden at launch with the `--editor` flag or an `AIDER_EDITOR` or `EDITOR` environment variables.
 
 ```yaml
 weak-model: openrouter/deepseek/deepseek-v3.2
@@ -82,6 +89,7 @@ Aider provides multiple configuration options and CLI flags to control filesyste
 - `aider --cache-prompts` — enable prompt caching (supported by Anthropic and some OpenRouter models); reduces costs and latency for repeated context by caching system prompts and long file contexts on the provider side.
 - `aider --no-stream` — disable streaming of model responses; waits for the full response before displaying output (useful when streaming causes issues or for cleaner logging).
 - `aider --message "prompt..."` — start the session with a long multi‑line prompt passed as a command‑line argument (use quotes for line breaks).
+- `aider --editor <editor-cmd>` — specify a text editor to use with `/editor` and similar commands (overrides the `EDITOR` environment variable and the `editor` config key).
 
 ## Chat Modes
 
@@ -129,7 +137,7 @@ Defined in .aider.conf.yml:
 - `/read <file>` — add read-only file to active context (reference without editing).
 - `/diff` — view current uncommitted changes made by the agent in local files.
 - `/undo` — revert the last applied changes.
-- `/editor` — open your configured text editor to write or paste long prompts with line breaks, avoiding truncated prompts when sending to the model.
+- `/editor` — open your configured text editor to write or paste long prompts with line breaks, avoiding truncated prompts when sending to the model. The editor is determined by (in priority order): the `--editor` CLI flag, the `EDITOR` environment variable, the `editor` key in `.aider.conf.yml`, or `vi` as a final fallback. You can change the editor at any time during a session by passing a different command to `/editor`, e.g., `/editor nano`.
 - `/paste` — enter multi‑line input mode for safe pasting of text with line breaks; type `END` on a new line to finish and send to the model.
 
 ## Working with Files & Context Management
