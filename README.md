@@ -77,6 +77,7 @@ Aider provides multiple configuration options and CLI flags to control filesyste
 - `aider --subtree-only` — restrict Aider's context and operations strictly to the current directory subtree.
 - `aider --no-git` — disable Git integration completely.
 - `aider --weak-model <alias>` — specify an auxiliary model for low-cost tasks (e.g. `aider --weak-model ds3`).
+- `aider --message "prompt..."` — start the session with a long multi‑line prompt passed as a command‑line argument (use quotes for line breaks).
 
 ## Chat Modes
 
@@ -122,6 +123,8 @@ Defined in .aider.conf.yml:
 - `/read <file>` — add read-only file to active context (reference without editing).
 - `/diff` — view current uncommitted changes made by the agent in local files.
 - `/undo` — revert the last applied changes.
+- `/editor` — open your configured text editor to write or paste long prompts with line breaks, avoiding truncated prompts when sending to the model.
+- `/paste` — enter multi‑line input mode for safe pasting of text with line breaks; type `END` on a new line to finish and send to the model.
 
 ## Working with Files & Context Management
 
@@ -137,6 +140,17 @@ Aider does not load the full content of all repository files into the model's co
 * **Session File Commands:**
   * `/ls` — list files currently active in the session context.
   * `/drop path/to/file.go` — remove a file from the active working context.
+
+### Long‑Prompt Input Methods
+
+Besides the in‑session `/editor` command, you can invoke an editor at startup or configure Aider to wait for your confirmation before sending prompts:
+
+* **Multi‑line input via `/paste`** – if you are already in a session but don’t want to use an external editor, type `/paste`. Aider will open a multi‑line input mode where you can safely paste any text with line breaks. When finished, type `END` on a new line (or press the completion key combination specific to your version) and the text will be sent to the model.
+* **Passing a prompt as a command‑line argument** – if you need to start a task immediately, pass your prompt in quotes directly when calling from the terminal:
+
+```bash
+aider --message "Your long and detailed multi‑line prompt..."
+```
 
 ## Privacy & File Exclusion (`.aiderignore`)
 
