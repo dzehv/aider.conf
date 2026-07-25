@@ -47,6 +47,8 @@ Key settings configured in `.aider.conf.yml`:
 - `auto-commits: false` — disables automatic git commits after edits to keep git history strictly under user control.
 - `read` — automatically loads personal coding standards (`~/.config/aider/aider-coding-standards.md`) on startup.
 - `weak-model` — specifies a cheaper/faster auxiliary model for low-complexity tasks (e.g. commit message generation, simple summaries). Example:
+- `cache-prompts: true` — enables prompt caching on the provider side (Anthropic / some OpenRouter models); reduces costs and latency for repeated context.
+- `stream: false` — disables streaming; Aider waits for the full model response before displaying output.
 
 ```yaml
 weak-model: openrouter/deepseek/deepseek-v3.2
@@ -77,6 +79,8 @@ Aider provides multiple configuration options and CLI flags to control filesyste
 - `aider --subtree-only` — restrict Aider's context and operations strictly to the current directory subtree.
 - `aider --no-git` — disable Git integration completely.
 - `aider --weak-model <alias>` — specify an auxiliary model for low-cost tasks (e.g. `aider --weak-model ds3`).
+- `aider --cache-prompts` — enable prompt caching (supported by Anthropic and some OpenRouter models); reduces costs and latency for repeated context by caching system prompts and long file contexts on the provider side.
+- `aider --no-stream` — disable streaming of model responses; waits for the full response before displaying output (useful when streaming causes issues or for cleaner logging).
 - `aider --message "prompt..."` — start the session with a long multi‑line prompt passed as a command‑line argument (use quotes for line breaks).
 
 ## Chat Modes
@@ -120,6 +124,8 @@ Defined in .aider.conf.yml:
 - `/chat-mode <mode>` — switch chat/edit mode on the fly (`code`, `architect`, `ask`, `help`).
 - `/auto-commits` — toggle automatic git commits on/off during the session.
 - `/yes-always` — toggle auto-confirmation mode on/off for prompts during the session.
+- `/cache-prompts` — toggle prompt caching on/off during the session.
+- `/stream` — toggle streaming of model responses on/off during the session.
 - `/read <file>` — add read-only file to active context (reference without editing).
 - `/diff` — view current uncommitted changes made by the agent in local files.
 - `/undo` — revert the last applied changes.

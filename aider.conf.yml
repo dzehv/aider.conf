@@ -6,6 +6,8 @@ weak-model: openrouter/deepseek/deepseek-v3.2
 
 # disable automatic git commits to keep history strictly under user control
 auto-commits: false
+# enable prompt caching on the provider side
+cache-prompts: true
 
 # automatically load personal coding standards and rules on startup
 read:
