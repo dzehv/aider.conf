@@ -137,7 +137,7 @@ Defined in .aider.conf.yml:
 - `/read <file>` — add read-only file to active context (reference without editing).
 - `/diff` — view current uncommitted changes made by the agent in local files.
 - `/undo` — revert the last applied changes.
-- `/editor` — open your configured text editor to write or paste long prompts with line breaks, avoiding truncated prompts when sending to the model. The editor is determined by (in priority order): the `--editor` CLI flag, the `EDITOR` environment variable, the `editor` key in `.aider.conf.yml`, or `vi` as a final fallback. You can change the editor at any time during a session by passing a different command to `/editor`, e.g., `/editor nano`.
+- `/editor` — open your configured text editor to write or paste long prompts with line breaks, avoiding truncated prompts when sending to the model. The editor is determined by (in priority order): the `--editor` CLI flag, the `EDITOR` environment variable, the `editor` key in `.aider.conf.yml`, or `vi` as a final fallback.
 - `/paste` — enter multi‑line input mode for safe pasting of text with line breaks; type `END` on a new line to finish and send to the model.
 
 ## Working with Files & Context Management

@@ -8,6 +8,8 @@ weak-model: openrouter/deepseek/deepseek-v3.2
 auto-commits: false
 # enable prompt caching on the provider side
 cache-prompts: true
+# use emacs in terminal mode for /editor to ensure proper unicode support when pasting
+editor: "emacs -nw"
 
 # automatically load personal coding standards and rules on startup
 read:
