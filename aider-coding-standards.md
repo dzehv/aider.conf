@@ -3,8 +3,8 @@
 - Use per language code conventions (if we’re using Golang, use go doc style for documenting functions, structs, global vars / constants).
 - Write ALL inline code comments in strictly lowercase English without dot at the end.
 - Use minimalist, clean architecture. Avoid over-engineering.
-- Follow strict Conventional Commits format when generating commit messages.
 - **Git & History Control**: You have unrestricted access to read-only Git commands (status, log, diff, show, etc.). However, **any operations that modify state** (staging/index updates, commits, pushes, merges, rebases) are strictly the user's responsibility. Your role is limited to generating formatted commit messages for the completed work when explicitly requested.
+- Follow strict Conventional Commits format when generating commit messages, but strictly ASCII, no Unicode allowed.
 
 # Communication & Cost Optimization
 
