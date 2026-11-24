@@ -137,6 +137,8 @@ Defined in .aider.conf.yml:
 - `/cache-prompts` — toggle prompt caching on/off during the session.
 - `/stream` — toggle streaming of model responses on/off during the session.
 - `/read <file>` — add read-only file to active context (reference without editing).
+- `/drop [file]` — remove a file from the active chat session (or all files if no argument is given).
+- `/tokens` — report the number of tokens used by the current chat context and their estimated cost.
 - `/diff` — view current uncommitted changes made by the agent in local files.
 - `/undo` — revert the last applied changes.
 - `/editor` — open your configured text editor to write or paste long prompts with line breaks, avoiding truncated prompts when sending to the model. The editor is determined by (in priority order): the `--editor` CLI flag, the `EDITOR` environment variable, the `editor` key in `.aider.conf.yml`, or `vi` as a final fallback.
