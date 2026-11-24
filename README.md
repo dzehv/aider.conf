@@ -121,6 +121,8 @@ Defined in .aider.conf.yml:
 - ds4    -> openrouter/deepseek/deepseek-v4-pro
 - sonnet -> openrouter/anthropic/claude-3.6-sonnet
 - flash  -> openrouter/google/gemini-2.5-flash
+- carbon -> openrouter/google/gemini-4-carbon
+- argon  -> openrouter/google/gemini-4-argon
 - haiku  -> openrouter/anthropic/claude-3-haiku
 
 ## Interactive Session Commands
