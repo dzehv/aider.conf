@@ -10,6 +10,8 @@ auto-commits: false
 cache-prompts: true
 # use emacs in terminal mode for /editor to ensure proper unicode support when pasting
 editor: "emacs -nw"
+# load per-model settings (e.g. max_tokens caps via extra_params)
+model-settings-file: ~/.aider.model.settings.yml
 
 # automatically load personal coding standards and rules on startup
 read:

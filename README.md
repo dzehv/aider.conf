@@ -56,9 +56,27 @@ Key settings configured in `.aider.conf.yml`:
 - `cache-prompts: true` — enables prompt caching on the provider side (Anthropic / some OpenRouter models); reduces costs and latency for repeated context.
 - `stream: false` — disables streaming; Aider waits for the full model response before displaying output.
 - `editor` — sets the preferred text editor for `/editor` and similar commands. Can be overridden at launch with the `--editor` flag or an `AIDER_EDITOR` or `EDITOR` environment variables.
+- `model-settings-file` — points to `~/.aider.model.settings.yml` for per-model overrides such as `extra_params.max_tokens`.
 
 ```yaml
 weak-model: openrouter/deepseek/deepseek-v3.2
+model-settings-file: ~/.aider.model.settings.yml
+```
+
+### Per-Model Output Limits (`.aider.model.settings.yml`)
+
+Models with large output ceilings (e.g., Gemini 4 Carbon and Argon, up to 65k–131k tokens) can trigger `max_tokens` or credit-limit errors on OpenRouter because:
+
+1. **Thinking tokens share the output budget** — hidden reasoning tokens count toward `max_tokens`.
+2. **Context window budget** — `input_tokens + max_tokens` must not exceed the model's total context window.
+3. **Worst-case credit pre-reservation** — OpenRouter reserves balance for the full requested `max_tokens` before each request, not just the actual response size.
+
+`aider.model.settings.yml` caps `max_tokens` via `extra_params` (e.g., `16384`) so Aider does not request the full window ceiling on every edit:
+
+```yaml
+- name: openrouter/google/gemini-4-carbon
+  extra_params:
+    max_tokens: 16384
 ```
 
 ## Access & Security Controls
@@ -86,6 +104,10 @@ Aider provides multiple configuration options and CLI flags to control filesyste
 - `aider --subtree-only` — restrict Aider's context and operations strictly to the current directory subtree.
 - `aider --no-git` — disable Git integration completely.
 - `aider --weak-model <alias>` — specify an auxiliary model for low-cost tasks (e.g. `aider --weak-model ds3`).
+- `aider --editor-model <alias>` — specify a separate model for code edits in `architect` mode (e.g., `aider --model carbon --editor-model argon --architect`).
+- `aider --model-settings-file <file>` — specify a YAML file with per-model overrides (such as `extra_params.max_tokens` for OpenRouter models).
+- `aider --thinking-tokens <tokens>` — set the thinking token budget for reasoning models (`0` to disable); helps prevent reasoning tokens from exhausting `max_tokens`.
+- `aider --max-chat-history-tokens <tokens>` — soft limit on chat history tokens before summarization, keeping input size well below `context_window - max_tokens`.
 - `aider --cache-prompts` — enable prompt caching (supported by Anthropic and some OpenRouter models); reduces costs and latency for repeated context by caching system prompts and long file contexts on the provider side.
 - `aider --no-stream` — disable streaming of model responses; waits for the full response before displaying output (useful when streaming causes issues or for cleaner logging).
 - `aider --message "prompt..."` — start the session with a long multi‑line prompt passed as a command‑line argument (use quotes for line breaks).
@@ -96,7 +118,7 @@ Aider provides multiple configuration options and CLI flags to control filesyste
 Specify chat behavior via `--chat-mode <mode>` flag or `/chat-mode <mode>` in-session command:
 
 - `code` — standard editing mode; directly modifies code files.
-- `architect` — two-step mode; plans architecture/solutions before writing code.
+- `architect` — two-step mode; plans architecture/solutions before writing code. Ideal for pairing a reasoning model (`carbon`) as architect with a faster/cheaper model (`argon`) as `--editor-model` to keep `max_tokens` usage and OpenRouter credit reservations low.
 - `ask` — conversational mode; answers questions about the codebase without making file changes.
 - `help` — help mode; answers questions about Aider's usage, commands, and options.
 
@@ -107,9 +129,9 @@ Specify chat behavior via `--chat-mode <mode>` flag or `/chat-mode <mode>` in-se
 Specify how the model applies code changes via `--edit-format <format>` flag or in `.aider.conf.yml` (`edit-format: <format>`):
 
 - `diff` — block-based search and replace; standard and highly efficient for capable models.
-- `whole` — rewrites the entire file; token-heavy but reliable, often used for smaller or weaker models.
+- `whole` — rewrites the entire file; token-heavy and much more likely to hit `max_tokens` output limits on large files, often used only for smaller or weaker models.
 - `udiff` — standard unified diff format; optimal for models heavily pre-trained on git diffs.
-- `architect` — two-model approach where the primary model plans the solution and delegates code changes to an editor model.
+- `architect` — two-model approach where the primary model plans the solution and delegates code changes to an editor model (useful for separating planning `max_tokens` from code-generation `max_tokens`).
 
 > **Recommendation:** It is best to leave `--edit-format` set to default. Models are natively tuned for specific edit formats (Aider selects the optimal format automatically per model). Manually overriding this flag is not recommended as it may degrade model performance or result in edit errors.
 
@@ -121,13 +143,13 @@ Defined in .aider.conf.yml:
 - ds4    -> openrouter/deepseek/deepseek-v4-pro
 - sonnet -> openrouter/anthropic/claude-3.6-sonnet
 - flash  -> openrouter/google/gemini-2.5-flash
-- carbon -> openrouter/google/gemini-4-carbon
-- argon  -> openrouter/google/gemini-4-argon
+- carbon -> openrouter/google/gemini-4-carbon *(default `max_tokens` capped at `16384` in `aider.model.settings.yml`; medium reasoning shares output budget)*
+- argon  -> openrouter/google/gemini-4-argon *(default `max_tokens` capped at `16384` in `aider.model.settings.yml`)*
 - haiku  -> openrouter/anthropic/claude-3-haiku
 
 ## Interactive Session Commands
 
-- `/clear` — wipe current conversation memory to start a fresh sub-task.
+- `/clear` — wipe current conversation memory to start a fresh sub-task and free input budget for `max_tokens`.
 - `/model <alias>` — switch main model on the fly during the session.
 - `/editor-model <alias>` — switch editor model used when in architect mode.
 - `/weak-model <alias>` — switch auxiliary (weak) model on the fly during the session.
@@ -137,8 +159,8 @@ Defined in .aider.conf.yml:
 - `/cache-prompts` — toggle prompt caching on/off during the session.
 - `/stream` — toggle streaming of model responses on/off during the session.
 - `/read <file>` — add read-only file to active context (reference without editing).
-- `/drop [file]` — remove a file from the active chat session (or all files if no argument is given).
-- `/tokens` — report the number of tokens used by the current chat context and their estimated cost.
+- `/drop [file]` — remove a file from the active chat session (or all files if no argument is given) to reduce input tokens and leave room for `max_tokens`.
+- `/tokens` — report the number of tokens used by the current chat context and their estimated cost (use this to verify `input + max_tokens` fits within the model's context window).
 - `/diff` — view current uncommitted changes made by the agent in local files.
 - `/undo` — revert the last applied changes.
 - `/editor` — open your configured text editor to write or paste long prompts with line breaks, avoiding truncated prompts when sending to the model. The editor is determined by (in priority order): the `--editor` CLI flag, the `EDITOR` environment variable, the `editor` key in `.aider.conf.yml`, or `vi` as a final fallback.
@@ -158,6 +180,17 @@ Aider does not load the full content of all repository files into the model's co
 * **Session File Commands:**
   * `/ls` — list files currently active in the session context.
   * `/drop path/to/file.go` — remove a file from the active working context.
+
+### Output Token Limits (`max_tokens`) & OpenRouter
+
+When using high-output reasoning models (such as Gemini 4 Carbon or Argon) via OpenRouter, hitting an output token or credit-limit error usually comes down to `max_tokens`:
+
+* **Thinking tokens count toward output:** Hidden reasoning tokens share the `max_tokens` ceiling with generated code.
+* **Window & credit reservation:** `input_tokens + max_tokens` must fit inside the model's context window, and OpenRouter pre-reserves account balance for the full requested `max_tokens` worst-case on every turn.
+* **Mitigations:**
+  * Cap `max_tokens` per model in `aider.model.settings.yml` via `extra_params` (configured to `16384` for `carbon` and `argon`).
+  * Keep input context lean with `/drop`, `/clear`, and `/tokens`, and break large multi-file refactors into smaller steps.
+  * Use `--thinking-tokens` to bound reasoning budget, or split roles with `--architect` (`carbon`) + `--editor-model argon`.
 
 ### Long‑Prompt Input Methods
 

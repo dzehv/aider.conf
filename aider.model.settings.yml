@@ -1,0 +1,8 @@
+# cap max_tokens for high-output models to avoid openrouter credit pre-reservation errors and context overflow
+- name: openrouter/google/gemini-4-carbon
+  extra_params:
+    max_tokens: 16384
+
+- name: openrouter/google/gemini-4-argon
+  extra_params:
+    max_tokens: 16384
