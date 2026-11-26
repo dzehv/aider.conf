@@ -25,5 +25,5 @@ alias:
   - "sonnet:openrouter/anthropic/claude-3.6-sonnet"
   - "flash:openrouter/google/gemini-2.5-flash"
   - "carbon:openrouter/google/gemini-4-carbon"
-  - "argon:openrouter/google/gemini-4-argon"
+  - "neon:openrouter/google/gemini-4-neon"
   - "haiku:openrouter/anthropic/claude-3-haiku"

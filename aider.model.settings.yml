@@ -3,6 +3,6 @@
   extra_params:
     max_tokens: 16384
 
-- name: openrouter/google/gemini-4-argon
+- name: openrouter/google/gemini-4-neon
   extra_params:
     max_tokens: 16384

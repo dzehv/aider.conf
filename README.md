@@ -65,7 +65,7 @@ model-settings-file: ~/.aider.model.settings.yml
 
 ### Per-Model Output Limits (`.aider.model.settings.yml`)
 
-Models with large output ceilings (e.g., Gemini 4 Carbon and Argon, up to 65k–131k tokens) can trigger `max_tokens` or credit-limit errors on OpenRouter because:
+Models with large output ceilings (e.g., Gemini 4 Carbon and Neon, up to 65k–131k tokens) can trigger `max_tokens` or credit-limit errors on OpenRouter because:
 
 1. **Thinking tokens share the output budget** — hidden reasoning tokens count toward `max_tokens`.
 2. **Context window budget** — `input_tokens + max_tokens` must not exceed the model's total context window.
@@ -104,7 +104,7 @@ Aider provides multiple configuration options and CLI flags to control filesyste
 - `aider --subtree-only` — restrict Aider's context and operations strictly to the current directory subtree.
 - `aider --no-git` — disable Git integration completely.
 - `aider --weak-model <alias>` — specify an auxiliary model for low-cost tasks (e.g. `aider --weak-model ds3`).
-- `aider --editor-model <alias>` — specify a separate model for code edits in `architect` mode (e.g., `aider --model carbon --editor-model argon --architect`).
+- `aider --editor-model <alias>` — specify a separate model for code edits in `architect` mode (e.g., `aider --model carbon --editor-model neon --architect`).
 - `aider --model-settings-file <file>` — specify a YAML file with per-model overrides (such as `extra_params.max_tokens` for OpenRouter models).
 - `aider --thinking-tokens <tokens>` — set the thinking token budget for reasoning models (`0` to disable); helps prevent reasoning tokens from exhausting `max_tokens`.
 - `aider --max-chat-history-tokens <tokens>` — soft limit on chat history tokens before summarization, keeping input size well below `context_window - max_tokens`.
@@ -118,7 +118,7 @@ Aider provides multiple configuration options and CLI flags to control filesyste
 Specify chat behavior via `--chat-mode <mode>` flag or `/chat-mode <mode>` in-session command:
 
 - `code` — standard editing mode; directly modifies code files.
-- `architect` — two-step mode; plans architecture/solutions before writing code. Ideal for pairing a reasoning model (`carbon`) as architect with a faster/cheaper model (`argon`) as `--editor-model` to keep `max_tokens` usage and OpenRouter credit reservations low.
+- `architect` — two-step mode; plans architecture/solutions before writing code. Ideal for pairing a reasoning model (`carbon`) as architect with a faster/cheaper model (`neon`) as `--editor-model` to keep `max_tokens` usage and OpenRouter credit reservations low.
 - `ask` — conversational mode; answers questions about the codebase without making file changes.
 - `help` — help mode; answers questions about Aider's usage, commands, and options.
 
@@ -144,7 +144,7 @@ Defined in .aider.conf.yml:
 - sonnet -> openrouter/anthropic/claude-3.6-sonnet
 - flash  -> openrouter/google/gemini-2.5-flash
 - carbon -> openrouter/google/gemini-4-carbon *(default `max_tokens` capped at `16384` in `aider.model.settings.yml`; medium reasoning shares output budget)*
-- argon  -> openrouter/google/gemini-4-argon *(default `max_tokens` capped at `16384` in `aider.model.settings.yml`)*
+- neon   -> openrouter/google/gemini-4-neon *(default `max_tokens` capped at `16384` in `aider.model.settings.yml`)*
 - haiku  -> openrouter/anthropic/claude-3-haiku
 
 ## Interactive Session Commands
@@ -183,14 +183,14 @@ Aider does not load the full content of all repository files into the model's co
 
 ### Output Token Limits (`max_tokens`) & OpenRouter
 
-When using high-output reasoning models (such as Gemini 4 Carbon or Argon) via OpenRouter, hitting an output token or credit-limit error usually comes down to `max_tokens`:
+When using high-output reasoning models (such as Gemini 4 Carbon or Neon) via OpenRouter, hitting an output token or credit-limit error usually comes down to `max_tokens`:
 
 * **Thinking tokens count toward output:** Hidden reasoning tokens share the `max_tokens` ceiling with generated code.
 * **Window & credit reservation:** `input_tokens + max_tokens` must fit inside the model's context window, and OpenRouter pre-reserves account balance for the full requested `max_tokens` worst-case on every turn.
 * **Mitigations:**
-  * Cap `max_tokens` per model in `aider.model.settings.yml` via `extra_params` (configured to `16384` for `carbon` and `argon`).
+  * Cap `max_tokens` per model in `aider.model.settings.yml` via `extra_params` (configured to `16384` for `carbon` and `neon`).
   * Keep input context lean with `/drop`, `/clear`, and `/tokens`, and break large multi-file refactors into smaller steps.
-  * Use `--thinking-tokens` to bound reasoning budget, or split roles with `--architect` (`carbon`) + `--editor-model argon`.
+  * Use `--thinking-tokens` to bound reasoning budget, or split roles with `--architect` (`carbon`) + `--editor-model neon`.
 
 ### Long‑Prompt Input Methods
 
